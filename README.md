@@ -90,7 +90,7 @@ If you have a Clear Linux environment that is consistent with the experimental e
 - if the output does not have 'xfs'
 	- cd /lib/modules/5.15.39/kernel/fs/xfs
 	- sudo cp xfs.ko /lib/modules/5.15.39/
-		- - This step ensure that Linux can find xfs.ko when loading xfs filesystem. 
+		- This step ensure that Linux can find xfs.ko when loading xfs filesystem. 
 
 ### Compile
 - cd [your-path]/F2FS-J/f2fsj
