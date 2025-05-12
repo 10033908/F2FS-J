@@ -7,12 +7,13 @@ F2FS-J is implemented based on clearlinux desktop with Linux kernel v5.15.39. Co
 
 ## ClearLinux
 If you have a Clear Linux environment that is consistent with the experimental environment of the thesis, you need to pay attention to the following matters.
-- Ensure filebench support a large number of files.
- - Download filebench from: wget https://phoenixnap.dl.sourceforge.net/project/filebench/1.5-alpha3/filebench-1.5-alpha3.tar.gz
- - uzip filebench: sudo tar -zxf filebench-1.5-alpha3.tar.gz -C /usr/local
- - cd /usr/local
- - modify FILEBENCH_NFILESETENTRIES (1024 * 1024) to (1024 * 1024 * 10) in ipc.h
- - sudo ./configure; sudo make; sudo make install
+
+### Ensure filebench support a large number of files.
+- Download filebench from: wget https://phoenixnap.dl.sourceforge.net/project/filebench/1.5-alpha3/filebench-1.5-alpha3.tar.gz
+- uzip filebench: sudo tar -zxf filebench-1.5-alpha3.tar.gz -C /usr/local
+- cd /usr/local
+- modify FILEBENCH_NFILESETENTRIES (1024 * 1024) to (1024 * 1024 * 10) in ipc.h
+- sudo ./configure; sudo make; sudo make install
 
 ### Download F2FS-J repo
 - cd [your-path]
