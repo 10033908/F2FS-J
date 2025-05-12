@@ -7,20 +7,95 @@ F2FS-J is implemented based on clearlinux desktop with Linux kernel v5.15.39. Co
 
 ### ClearLinux
 If you have a Clear Linux environment that is consistent with the experimental environment of the thesis, you need to pay attention to the following matters.
-- Download filebench from: wget https://phoenixnap.dl.sourceforge.net/project/filebench/1.5-alpha3/filebench-1.5-alpha3.tar.gz
-- uzip filebench: sudo tar -zxf filebench-1.5-alpha3.tar.gz -C /usr/local
-- cd /usr/local
-- modify FILEBENCH_NFILESETENTRIES (1024 * 1024) to (1024 * 1024 * 10) in ipc.h to make filebench support a large number of files.
-- sudo ./configure; sudo make; sudo make install
+- Ensure filebench support a large number of files.
+ - Download filebench from: wget https://phoenixnap.dl.sourceforge.net/project/filebench/1.5-alpha3/filebench-1.5-alpha3.tar.gz
+ - uzip filebench: sudo tar -zxf filebench-1.5-alpha3.tar.gz -C /usr/local
+ - cd /usr/local
+ - modify FILEBENCH_NFILESETENTRIES (1024 * 1024) to (1024 * 1024 * 10) in ipc.h
+ - sudo ./configure; sudo make; sudo make install
 
-Then, modify the paths of kernel source code and .o files involved in the compilation within a Makefile in ~/f2fsj/f2fsj.
-- For example, KDIR ?= /lib/modules/$(shell uname -r)/build
+Download F2FS-J repo
+- cd [your-path]
+- Download repo
+	- For example, using command 'git clone https://github.com/10033908/F2FS-J.git' or Download .zip and unzip it to [your-path]
+
+Create a virtual storage device for testing
+- cd [your-path]/F2FS-J
+- mkdir test_dir && cd test_dir
+- dd if=/dev/zero of=dev.img bs=1M count=16384
+
+Config compilation path 
+- cd [your-path]/F2FS-J/f2fsj, then you can see a Makefile
+- Check the default compilation path
+ - Run "uname -r" in shell, if the output is not 5.15.39
+  - Modify the value of KDIR in Makefile, for example, KDIR ?= /lib/modules/5.15.39/build
+
+
+Config filebench working path
+- cd /
+ - sudo mkdir j_f2fs_mount_point
+ - sudo mkdir f2fs_mount_point
+ - sudo mkdir ext4_mount_point
+ - sudo mkdir xfs_mount_point
+
+
+Config filebench file paths in testing scripts
+- For f2fsj filesystem
+	- cd [your-path]/F2FS-J/filebench/script/j_f2fs_fb.sh
+	- Modify following paths
+		- dev_path=[your-path]/F2FS-J/test_dir/dev.img
+		- meta_bench_path=[your-path]/F2FS-J/filebench/meta_data_only/j_f2fs_fb
+		- meta_data_bench_path=[your-path]/F2FS-J/filebench/data_and_meta_data/j_f2fs_fb
+		- realwork_bench_path=[your-path]/F2FS-J/filebench/real_workloads/j_f2fs_fb
+- For f2fs filesystem
+	- cd [your-path]/F2FS-J/filebench/script/f2fs_fb.sh
+	- Modify following paths
+		- dev_path=[your-path]/F2FS-J/test_dir/dev.img
+		- meta_bench_path=[your-path]/F2FS-J/filebench/meta_data_only/f2fs_fb
+		- meta_data_bench_path=[your-path]/F2FS-J/filebench/data_and_meta_data/f2fs_fb
+		- realwork_bench_path=[your-path]/F2FS-J/filebench/real_workloads/f2fs_fb
+- For ext4 filesystem
+	- cd [your-path]/F2FS-J/filebench/script/ext4_fb.sh
+	- Modify following paths
+		- dev_path=[your-path]/F2FS-J/test_dir/dev.img
+		- meta_bench_path=[your-path]/F2FS-J/filebench/meta_data_only/ext4_fb
+		- meta_data_bench_path=[your-path]/F2FS-J/filebench/data_and_meta_data/ext4_fb
+		- realwork_bench_path=[your-path]/F2FS-J/filebench/real_workloads/ext4_fb
+- For xfs filesystem
+	- cd [your-path]/F2FS-J/filebench/script/xfs_fb.sh
+	- Modify following paths
+		- dev_path=[your-path]/F2FS-J/test_dir/dev.img
+		- meta_bench_path=[your-path]/F2FS-J/filebench/meta_data_only/xfs_fb
+		- meta_data_bench_path=[your-path]/F2FS-J/filebench/data_and_meta_data/xfs_fb
+		- realwork_bench_path=[your-path]/F2FS-J/filebench/real_workloads/xfs_fb
+
+Check if f2fs is insmod
+- run 'cat /proc/filesystems | grep f2fs', if the output has 'f2fs'
+	- cd [your-path]/F2FS-J/filebench/script/f2fs_fb.sh
+	- Comment out the line `sudo modprobe f2fs`.  
+- if the output does not have 'f2fs'
+	- cd /lib/modules/5.15.39/kernel/fs/f2fs
+	- sudo cp f2fs.ko /lib/modules/5.15.39/
+
+Check if xfs is insmod
+- run 'cat /proc/filesystems | grep xfs', if the output has 'xfs'
+	- cd [your-path]/F2FS-J/filebench/script/xfs_fb.sh
+	- Comment out the line `sudo modprobe xfs`.  
+- if the output does not have 'xfs'
+	- cd /lib/modules/5.15.39/kernel/fs/xfs
+	- sudo cp xfs.ko /lib/modules/5.15.39/
+
+
+Check potential compilation conflicts
+- run 'mount | grep f2fs' to check if f2fs is already mounted, if yes, you need to modify some trace functions in [your-5.15.39-kernel-path]/trace/event/f2fs.h by error outputs
+- This step is just a check, as the ext4 filesystem is enabled by default on Linux systems instead of f2fs.  
+
 
 Compile
-- cd ~/f2fsj/f2fsj; ./script/build f2fsj/f2fsj
-- Note that if the default filesystem is f2fs, you need to modify some trace functions in kernel-path/trace/event/f2fs.h
-
-Config storage device path and mount path at ~/f2fs/filebench/script/j_f2fs_fb.sh; (also need to modify ext4_fb.sh/f2fs_fb.sh/xfs_fb.sh)
+- cd [your-path]/F2FS-J/f2fsj
+- ./script/build f2fsj
 
 Run
-- cd ~/f2fs/filebench/script; sudo ./setup.sh; sudo ./j_f2fs_fb.sh create_4k (using -h to check other benchmarks)
+- cd [your-path]/F2FS-J/filebench/script
+- sudo ./setup.sh 
+- sudo ./j_f2fs_fb.sh create_4k (using -h to check other benchmark commands)
