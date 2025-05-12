@@ -1,11 +1,11 @@
 ## How to run F2FS-J
 F2FS-J is implemented based on clearlinux desktop with Linux kernel v5.15.39. Considering the kernel compatibility and the issues of toolchain dependencies, we provide two ways to build and run the platform.
 
-### Ubuntu VM
+## Ubuntu VM
 - We provide a virtual machine environment of Ubuntu. Specifically, based on the Ubuntu 20.04.3 release version, we have replaced the kernel with version 5.15.39 and also completed the installation of the relevant toolchain. This virtual machine environment can be used for simple testing.
 - Please refer ubuntu_guide.pdf for using.
 
-### ClearLinux
+## ClearLinux
 If you have a Clear Linux environment that is consistent with the experimental environment of the thesis, you need to pay attention to the following matters.
 - Ensure filebench support a large number of files.
  - Download filebench from: wget https://phoenixnap.dl.sourceforge.net/project/filebench/1.5-alpha3/filebench-1.5-alpha3.tar.gz
@@ -14,24 +14,28 @@ If you have a Clear Linux environment that is consistent with the experimental e
  - modify FILEBENCH_NFILESETENTRIES (1024 * 1024) to (1024 * 1024 * 10) in ipc.h
  - sudo ./configure; sudo make; sudo make install
 
-Download F2FS-J repo
+### Download F2FS-J repo
 - cd [your-path]
 - Download repo
 	- For example, using command 'git clone https://github.com/10033908/F2FS-J.git' or Download .zip and unzip it to [your-path]
 
-Create a virtual storage device for testing
+### Create a virtual storage device for testing
 - cd [your-path]/F2FS-J
 - mkdir test_dir && cd test_dir
 - dd if=/dev/zero of=dev.img bs=1M count=16384
 
-Config compilation path 
+### Config compilation path 
 - cd [your-path]/F2FS-J/f2fsj, then you can see a Makefile
 - Check the default compilation path
- - Run "uname -r" in shell, if the output is not 5.15.39
-  - Modify the value of KDIR in Makefile, for example, KDIR ?= /lib/modules/5.15.39/build
+ 	- Run "uname -r" in shell, if the output is not 5.15.39
+  	- Modify the value of KDIR in Makefile to '[your-5.15.39-linux-install-path]/build' , e.g., KDIR ?= /lib/modules/5.15.39/build
+- cd [your-path]/F2FS-J/f2fsj/script, then you can see a build.sh
+	- Again, if the output of 'uname -r' is not 5.15.39
+		-  Modify '/lib/modules/$(shell uname -r)/f2fsj.ko' to '[your-5.15.39-linux-install-path]/f2fsj.ko'
+			- E.g., '/lib/modules/5.15.39/f2fsj.ko'
+		- This step ensure that Linux can find f2fsj.ko when loading f2fsj filesystem.
 
-
-Config filebench working path
+### Config filebench working path
 - cd /
  - sudo mkdir j_f2fs_mount_point
  - sudo mkdir f2fs_mount_point
@@ -39,7 +43,7 @@ Config filebench working path
  - sudo mkdir xfs_mount_point
 
 
-Config filebench file paths in testing scripts
+### Config filebench file paths in testing scripts
 - For f2fsj filesystem
 	- cd [your-path]/F2FS-J/filebench/script/j_f2fs_fb.sh
 	- Modify following paths
@@ -69,7 +73,7 @@ Config filebench file paths in testing scripts
 		- meta_data_bench_path=[your-path]/F2FS-J/filebench/data_and_meta_data/xfs_fb
 		- realwork_bench_path=[your-path]/F2FS-J/filebench/real_workloads/xfs_fb
 
-Check if f2fs is insmod
+### Check if f2fs is insmod
 - run 'cat /proc/filesystems | grep f2fs', if the output has 'f2fs'
 	- cd [your-path]/F2FS-J/filebench/script/f2fs_fb.sh
 	- Comment out the line `sudo modprobe f2fs`.  
@@ -77,7 +81,7 @@ Check if f2fs is insmod
 	- cd /lib/modules/5.15.39/kernel/fs/f2fs
 	- sudo cp f2fs.ko /lib/modules/5.15.39/
 
-Check if xfs is insmod
+### Check if xfs is insmod
 - run 'cat /proc/filesystems | grep xfs', if the output has 'xfs'
 	- cd [your-path]/F2FS-J/filebench/script/xfs_fb.sh
 	- Comment out the line `sudo modprobe xfs`.  
@@ -85,15 +89,15 @@ Check if xfs is insmod
 	- cd /lib/modules/5.15.39/kernel/fs/xfs
 	- sudo cp xfs.ko /lib/modules/5.15.39/
 
-Compile
+### Compile
 - cd [your-path]/F2FS-J/f2fsj
-- ./script/build f2fsj
+- sudo ./script/build.sh f2fsj
 
-Run
+### Run
 - cd [your-path]/F2FS-J/filebench/script
 - sudo ./setup.sh 
 - sudo ./j_f2fs_fb.sh create_4k (using -h to check other benchmark commands)
 
-Potential runtime conflicts
+### Potential runtime conflicts
 - run 'mount | grep f2fs' to check if f2fs is already mounted, if yes, you need to modify some trace functions in [your-5.15.39-kernel-path]/trace/event/f2fs.h by error outputs (sudo dmesg -w in terminal)
 - This is due to F2FSJ is implemented on top of F2FS, their kernel trace functions are identical. However, the Linux kernel does not support loading two modules with duplicate trace functions at runtime.
