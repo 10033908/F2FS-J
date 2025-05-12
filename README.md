@@ -8,7 +8,7 @@ F2FS-J is implemented based on clearlinux desktop with Linux kernel v5.15.39. Co
 ## ClearLinux
 If you have a Clear Linux environment that is consistent with the experimental environment of the thesis, you need to pay attention to the following matters.
 
-### Ensure filebench support a large number of files.
+### Ensure filebench support a large number of files
 - Download filebench from: wget https://phoenixnap.dl.sourceforge.net/project/filebench/1.5-alpha3/filebench-1.5-alpha3.tar.gz
 - uzip filebench: sudo tar -zxf filebench-1.5-alpha3.tar.gz -C /usr/local
 - cd /usr/local
@@ -81,6 +81,7 @@ If you have a Clear Linux environment that is consistent with the experimental e
 - if the output does not have 'f2fs'
 	- cd /lib/modules/5.15.39/kernel/fs/f2fs
 	- sudo cp f2fs.ko /lib/modules/5.15.39/
+		- This step ensure that Linux can find f2fs.ko when loading f2fs filesystem. 
 
 ### Check if xfs is insmod
 - run 'cat /proc/filesystems | grep xfs', if the output has 'xfs'
@@ -89,6 +90,7 @@ If you have a Clear Linux environment that is consistent with the experimental e
 - if the output does not have 'xfs'
 	- cd /lib/modules/5.15.39/kernel/fs/xfs
 	- sudo cp xfs.ko /lib/modules/5.15.39/
+		- - This step ensure that Linux can find xfs.ko when loading xfs filesystem. 
 
 ### Compile
 - cd [your-path]/F2FS-J/f2fsj
