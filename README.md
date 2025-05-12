@@ -92,11 +92,11 @@ If you have a Clear Linux environment that is consistent with the experimental e
 	- sudo cp xfs.ko /lib/modules/5.15.39/
 		- This step ensure that Linux can find xfs.ko when loading xfs filesystem. 
 
-### Compile
+### Compile f2fs.ko
 - cd [your-path]/F2FS-J/f2fsj
 - sudo ./script/build.sh f2fsj
 
-### Run
+### Run f2fsj filesystem by filebench scripts
 - cd [your-path]/F2FS-J/filebench/script
 - sudo ./setup.sh 
 - sudo ./j_f2fs_fb.sh create_4k (using -h to check other benchmark commands)
