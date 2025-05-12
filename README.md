@@ -85,12 +85,6 @@ Check if xfs is insmod
 	- cd /lib/modules/5.15.39/kernel/fs/xfs
 	- sudo cp xfs.ko /lib/modules/5.15.39/
 
-
-Check potential compilation conflicts
-- run 'mount | grep f2fs' to check if f2fs is already mounted, if yes, you need to modify some trace functions in [your-5.15.39-kernel-path]/trace/event/f2fs.h by error outputs
-- This step is just a check, as the ext4 filesystem is enabled by default on Linux systems instead of f2fs.  
-
-
 Compile
 - cd [your-path]/F2FS-J/f2fsj
 - ./script/build f2fsj
@@ -99,3 +93,7 @@ Run
 - cd [your-path]/F2FS-J/filebench/script
 - sudo ./setup.sh 
 - sudo ./j_f2fs_fb.sh create_4k (using -h to check other benchmark commands)
+
+Potential runtime conflicts
+- run 'mount | grep f2fs' to check if f2fs is already mounted, if yes, you need to modify some trace functions in [your-5.15.39-kernel-path]/trace/event/f2fs.h by error outputs (sudo dmesg -w in terminal)
+- This is due to F2FSJ is implemented on top of F2FS, their kernel trace functions are identical. However, the Linux kernel does not support loading two modules with duplicate trace functions at runtime.
