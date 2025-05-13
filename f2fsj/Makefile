@@ -16,7 +16,8 @@ $(MODULE_NAME)-$(CONFIG_F2FS_FS_XATTR) += xattr.o
 $(MODULE_NAME)-$(CONFIG_F2FS_FS_POSIX_ACL) += acl.o
 $(MODULE_NAME)-$(CONFIG_FS_VERITY) += verity.o
 $(MODULE_NAME)-$(CONFIG_F2FS_FS_COMPRESSION) += compress.o
-$(MODULE_NAME)-$(CONFIG_F2FS_IOSTAT) += iostat.o
+# Disable IOstat
+#$(MODULE_NAME)-$(CONFIG_F2FS_IOSTAT) += iostat.o
 
 all:
 	make -C $(KDIR) M=$(PWD) modules
