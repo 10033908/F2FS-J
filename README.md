@@ -93,6 +93,7 @@ If you have a Clear Linux environment that is consistent with the experimental e
 		- This step ensure that Linux can find xfs.ko when loading xfs filesystem. 
 
 ### Compile f2fs.ko
+- Before compilation, please ensure that the kernel configuration, CONFIG_F2FS_IOSTAT is disabled.
 - cd [your-path]/F2FS-J/f2fsj
 - sudo ./script/build.sh f2fsj
 
