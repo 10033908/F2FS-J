@@ -67,6 +67,8 @@ If you have a Clear Linux environment that is consistent with the experimental e
 		- meta_data_bench_path=[your-path]/F2FS-J/filebench/data_and_meta_data/ext4_fb
 		- realwork_bench_path=[your-path]/F2FS-J/filebench/real_workloads/ext4_fb
 - For xfs filesystem
+	- Ensure mkfs.xfs is installed
+ 		- If not, please install it with 'apt install xfsprogs -y'
 	- cd [your-path]/F2FS-J/filebench/script/xfs_fb.sh
 	- Modify following paths
 		- dev_path=[your-path]/F2FS-J/test_dir/dev.img
@@ -98,6 +100,8 @@ If you have a Clear Linux environment that is consistent with the experimental e
 - sudo ./script/build.sh f2fsj
 
 ### Run f2fsj filesystem by filebench scripts
+- Ensure command application mkfs.f2fs is installed (in f2fs-tools).
+	- If not, install it with 'apt install f2fs-tools'
 - cd [your-path]/F2FS-J/filebench/script
 - sudo ./setup.sh 
 - sudo ./j_f2fs_fb.sh create_4k (using -h to check other benchmark commands)
