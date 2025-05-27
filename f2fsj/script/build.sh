@@ -9,7 +9,7 @@ function make_vfs_ko(){
         #cp ./build/lib/modules/5.15.39/extra/f2fsj.ko ../f2fsj_build/f2fsj.ko
         #cp ./build/lib/modules/5.15.39/extra/f2fsj.ko /home/ytcui22/f2fsj/f2fsj/filebench/script/f2fsj.ko
         #cp ./build/lib/modules/5.15.39/extra/f2fsj.ko ../crash_test/f2fsj.ko
-        sudo cp ./build/lib/modules/5.15.39/extra/f2fsj.ko /lib/modules/$(shell uname -r)/f2fsj.ko
+        sudo cp ./build/lib/modules/5.15.39/extra/f2fsj.ko /lib/modules/$(uname -r)/f2fsj.ko
     return 0
 
     else
